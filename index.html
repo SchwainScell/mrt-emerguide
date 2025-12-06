@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MRT Emerguide Game</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="home-screen" class="screen active">
+        <div class="container">
+            <h1>MRT Emerguide<br>Interactive Direction Game</h1>
+            <p>Temukan jalur evakuasi dan selesaikan misinya!</p>
+            <button class="btn-primary" onclick="startGame()">Mulai Bermain</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div class="map-container">
+            <img src="map.png" alt="Peta Evakuasi" class="game-map">
+        </div>
+
+        <div class="chat-interface">
+            <div id="chat-box" class="chat-box">
+                </div>
+            
+            <div class="controls">
+                <p id="instruction-text" class="status-text">Menunggu instruksi...</p>
+                <label for="camera-input" class="btn-camera">
+                    📷 Ambil Foto Pion
+                </label>
+                <input type="file" id="camera-input" accept="image/*" capture="environment" onchange="handlePhotoUpload()">
+            </div>
+        </div>
+    </div>
+
+    <div id="result-screen" class="screen">
+        <div class="container">
+            <h1>SELAMAT! 🎉</h1>
+            <div class="badge">
+                🏆
+            </div>
+            <h2>Level Up!</h2>
+            <p>Kamu telah menjadi <strong>Master Evakuasi MRT</strong>.</p>
+            <p>Semua area berhasil diidentifikasi.</p>
+            <button class="btn-primary" onclick="location.reload()">Kembali ke Home</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
