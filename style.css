@@ -1,4 +1,4 @@
-/* MRT Jakarta Color Palette based on document */
+/* MRT Jakarta Color Palette */
 :root {
     --mrt-blue: #00529C;
     --mrt-green: #00A44B;
@@ -32,8 +32,8 @@ body {
     background-color: var(--mrt-blue);
     color: white;
     padding: 1rem;
-    text-align: center;
     font-weight: bold;
+    z-index: 20;
 }
 
 .btn-primary {
@@ -58,7 +58,7 @@ body {
     cursor: not-allowed;
 }
 
-/* Wizard of Oz Control Panel (Hidden in real app) */
+/* Wizard of Oz Control Panel */
 .wizard-panel {
     position: absolute;
     bottom: 0;
@@ -73,7 +73,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 5px;
-    box-sizing: border-box; /* Ensures padding doesn't overflow width */
+    box-sizing: border-box;
 }
 
 .wizard-btn {
@@ -82,7 +82,7 @@ body {
     color: #00ff00;
     padding: 5px;
     cursor: pointer;
-    width: 100%; /* Make button full width of panel */
+    width: 100%;
 }
 
 .screen {
@@ -91,7 +91,7 @@ body {
     height: 100%;
     padding: 20px;
     animation: fadeIn 0.3s ease-in-out;
-    overflow-y: auto; /* Allow scrolling if content is tall */
+    overflow-y: auto;
 }
 
 .screen.active {
@@ -107,7 +107,8 @@ body {
     border: 2px solid var(--mrt-blue);
     border-radius: 12px;
     padding: 15px;
-    margin-top: 20px;
+    margin-top: auto;
+    margin-bottom: 20px;
     text-align: center;
 }
 
