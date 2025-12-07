@@ -1,39 +1,45 @@
 // --- DATA OBJECTIVES ---
+// Images are mapped to the filenames provided by the user
 const objectives = [
     {
         id: 1,
         title: "Orientasi Lokasi",
-        desc: "Lihat peta 3D di papan. Kamu berada di Gerbong 3.",
+        desc: "Lihat peta 3D di papan. Kamu saat ini berada di Gerbong 3.",
         instruction: "Geser PION PENGGUNA ke titik 'You Are Here' di peta.",
-        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Map+Pawn+Slot" // Replace with Page 127
+        // Using the map image
+        img: "map_visual.png" 
     },
     {
         id: 2,
         title: "Lapor Darurat",
-        desc: "Beritahu masinis tentang asap.",
+        desc: "Beritahu masinis tentang asap yang terlihat.",
         instruction: "Tekan TOMBOL INTERKOM pada modul alat darurat.",
-        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Intercom+Button" // Replace with Page 29
+        // Using the intercom image
+        img: "intercom.png"
     },
     {
         id: 3,
         title: "Buka Pintu Darurat",
-        desc: "Kereta berhenti. Buka pintu secara manual.",
+        desc: "Kereta berhenti darurat. Buka pintu secara manual.",
         instruction: "Tarik TUAS Emergency Door Release pada papan.",
-        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Door+Release+Lever" // Replace with Page 29
+        // Using the door release image
+        img: "door_release.png"
     },
     {
         id: 4,
         title: "Padamkan Api Kecil",
-        desc: "Ada api kecil menghalangi jalan.",
+        desc: "Ada api kecil menghalangi jalan keluar.",
         instruction: "Simulasikan gerakan menekan tuas pada replika APAR.",
-        img: "https://placehold.co/400x300/e2e8f0/00529C?text=APAR+Module" // Replace with Page 29
+        // Using the APAR image
+        img: "apar.png"
     },
     {
         id: 5,
         title: "Evakuasi",
-        desc: "Jalur aman. Menuju titik kumpul.",
+        desc: "Jalur sudah aman. Segera menuju titik kumpul.",
         instruction: "Geser PION PENGGUNA mengikuti jalur hijau ke Assembly Point.",
-        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Assembly+Point+Map" // Replace with Page 26
+        // Reusing the map visual for evacuation route
+        img: "map_visual.png"
     }
 ];
 
@@ -41,16 +47,14 @@ let currentStep = 0;
 
 // --- NAVIGATION FUNCTIONS ---
 function showScreen(screenId) {
-    // Hide all screens
     const screens = document.querySelectorAll('.screen');
     screens.forEach(s => s.classList.remove('active'));
     
-    // Show the target screen
     const targetScreen = document.getElementById(screenId);
     if (targetScreen) {
         targetScreen.classList.add('active');
-    } else {
-        console.error("Screen not found: " + screenId);
+        // Reset scroll position
+        targetScreen.scrollTop = 0;
     }
 }
 
@@ -59,7 +63,7 @@ function simulateConnection() {
     if (!btn) return;
     
     const originalText = btn.innerHTML;
-    btn.innerHTML = "Connecting...";
+    btn.innerHTML = "Menghubungkan...";
     btn.disabled = true;
     
     // Fake loading time for NFC connection
@@ -88,7 +92,14 @@ function loadObjective(index) {
     document.getElementById('objective-title').innerText = `Misi ${index + 1}: ${data.title}`;
     document.getElementById('objective-desc').innerText = data.desc;
     document.getElementById('board-instruction').innerText = data.instruction;
-    document.getElementById('objective-img').src = data.img;
+    
+    // Handle Image
+    const imgElement = document.getElementById('objective-img');
+    imgElement.src = data.img;
+    imgElement.onerror = function() {
+        // Fallback if image fails to load
+        this.src = "https://placehold.co/400x300/f3f4f6/9ca3af?text=Image+Not+Found";
+    };
     
     // Update progress bar
     const progress = ((index) / objectives.length) * 100;
@@ -103,8 +114,6 @@ function resetApp() {
 }
 
 // --- WIZARD OF OZ LOGIC ---
-// This function simulates the Board sending a signal to the App
-// saying "Pressure sensor activated" or "Magnet moved correctly"
 function triggerBoardSensor() {
     // Check if we are in game mode
     if (!document.getElementById('screen-game').classList.contains('active')) return;
@@ -117,5 +126,5 @@ function triggerBoardSensor() {
     setTimeout(() => {
         currentStep++;
         loadObjective(currentStep);
-    }, 1000);
+    }, 1500);
 }
