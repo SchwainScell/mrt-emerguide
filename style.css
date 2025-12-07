@@ -1,141 +1,122 @@
-body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f0f2f5;
-    text-align: center;
-    color: #333;
+/* MRT Jakarta Color Palette based on document */
+:root {
+    --mrt-blue: #00529C;
+    --mrt-green: #00A44B;
+    --mrt-yellow: #FDB913;
 }
 
-/* Mengatur agar layar berganti-ganti (Home -> Game -> Result) */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.app-container {
+    width: 100%;
+    max-width: 400px;
+    height: 100%;
+    max-height: 850px;
+    background-color: white;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.mrt-header {
+    background-color: var(--mrt-blue);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: var(--mrt-green);
+    color: white;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+.btn-primary:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Wizard of Oz Control Panel (Hidden in real app) */
+.wizard-panel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.8);
+    color: #00ff00;
+    padding: 10px;
+    font-size: 10px;
+    font-family: monospace;
+    z-index: 50;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    box-sizing: border-box; /* Ensures padding doesn't overflow width */
+}
+
+.wizard-btn {
+    background: #333;
+    border: 1px solid #00ff00;
+    color: #00ff00;
+    padding: 5px;
+    cursor: pointer;
+    width: 100%; /* Make button full width of panel */
+}
+
 .screen {
     display: none;
-    height: 100vh;
     flex-direction: column;
+    height: 100%;
+    padding: 20px;
+    animation: fadeIn 0.3s ease-in-out;
+    overflow-y: auto; /* Allow scrolling if content is tall */
 }
 
 .screen.active {
     display: flex;
 }
 
-/* Styling Container Umum */
-.container {
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-h1 { color: #0056b3; }
-
-/* Tombol */
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 18px;
-    border-radius: 25px;
-    cursor: pointer;
+.objective-card {
+    border: 2px solid var(--mrt-blue);
+    border-radius: 12px;
+    padding: 15px;
     margin-top: 20px;
-    font-weight: bold;
-}
-
-.btn-primary:active { transform: scale(0.98); }
-
-/* Tombol Kamera Custom */
-.btn-camera {
-    display: block;
-    background-color: #28a745;
-    color: white;
-    padding: 15px;
-    border-radius: 10px;
     text-align: center;
-    cursor: pointer;
-    margin-top: 10px;
-    font-weight: bold;
 }
 
-/* Sembunyikan input file asli yang jelek */
-#camera-input { display: none; }
-
-/* Styling Area Game */
-.map-container {
-    flex: 1;
-    overflow: auto;
-    background: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.pulse-anim {
+    animation: pulse 2s infinite;
 }
 
-.game-map {
-    width: 100%;
-    max-width: 600px; /* Supaya tidak terlalu besar di desktop */
-    height: auto;
-}
-
-.chat-interface {
-    flex: 1;
-    background: white;
-    display: flex;
-    flex-direction: column;
-    border-top: 2px solid #ccc;
-    max-height: 50vh; /* Setengah layar bawah untuk chat */
-}
-
-.chat-box {
-    flex: 1;
-    padding: 15px;
-    overflow-y: auto;
-    text-align: left;
-    background-color: #e5ddd5;
-}
-
-.controls {
-    padding: 15px;
-    background: #fff;
-}
-
-/* Bubble Chat Style */
-.message {
-    padding: 10px 15px;
-    margin: 5px 0;
-    border-radius: 15px;
-    max-width: 80%;
-    font-size: 14px;
-    clear: both;
-}
-
-.bot {
-    background-color: #ffffff;
-    float: left;
-    border-bottom-left-radius: 2px;
-}
-
-.user {
-    background-color: #dcf8c6;
-    float: right;
-    border-bottom-right-radius: 2px;
-}
-
-.status-text {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 5px;
-}
-
-/* Badge Style */
-.badge {
-    font-size: 80px;
-    margin: 20px;
-    animation: bounce 2s infinite;
-}
-
-@keyframes bounce {
-    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-    40% {transform: translateY(-20px);}
-    60% {transform: translateY(-10px);}
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(0, 164, 75, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(0, 164, 75, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 164, 75, 0); }
 }

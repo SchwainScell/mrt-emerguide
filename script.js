@@ -1,91 +1,121 @@
-// Data Misi
-const missions = [
-    "Selamat datang! Misi pertama: Cari dan potret pion di Area 1 (Pintu Masuk).",
-    "Kerja bagus! Sekarang bergeraklah, cari dan potret pion di Area 2 (Tangga Darurat).",
-    "Luar biasa! Selanjutnya, temukan pion di Area 3 (Titik Kumpul Tengah).",
-    "Hampir selesai! Cari pion di Area 4 (Lorong Evakuasi).",
-    "Terakhir! Segera menuju Area 5 (Pintu Keluar) dan potret pionnya!"
+// --- DATA OBJECTIVES ---
+const objectives = [
+    {
+        id: 1,
+        title: "Orientasi Lokasi",
+        desc: "Lihat peta 3D di papan. Kamu berada di Gerbong 3.",
+        instruction: "Geser PION PENGGUNA ke titik 'You Are Here' di peta.",
+        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Map+Pawn+Slot" // Replace with Page 127
+    },
+    {
+        id: 2,
+        title: "Lapor Darurat",
+        desc: "Beritahu masinis tentang asap.",
+        instruction: "Tekan TOMBOL INTERKOM pada modul alat darurat.",
+        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Intercom+Button" // Replace with Page 29
+    },
+    {
+        id: 3,
+        title: "Buka Pintu Darurat",
+        desc: "Kereta berhenti. Buka pintu secara manual.",
+        instruction: "Tarik TUAS Emergency Door Release pada papan.",
+        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Door+Release+Lever" // Replace with Page 29
+    },
+    {
+        id: 4,
+        title: "Padamkan Api Kecil",
+        desc: "Ada api kecil menghalangi jalan.",
+        instruction: "Simulasikan gerakan menekan tuas pada replika APAR.",
+        img: "https://placehold.co/400x300/e2e8f0/00529C?text=APAR+Module" // Replace with Page 29
+    },
+    {
+        id: 5,
+        title: "Evakuasi",
+        desc: "Jalur aman. Menuju titik kumpul.",
+        instruction: "Geser PION PENGGUNA mengikuti jalur hijau ke Assembly Point.",
+        img: "https://placehold.co/400x300/e2e8f0/00529C?text=Assembly+Point+Map" // Replace with Page 26
+    }
 ];
 
-let currentLevel = 0;
+let currentStep = 0;
 
-// Fungsi Pindah Layar
+// --- NAVIGATION FUNCTIONS ---
 function showScreen(screenId) {
-    document.querySelectorAll('.screen').forEach(screen => {
-        screen.classList.remove('active');
-    });
-    document.getElementById(screenId).classList.add('active');
-}
-
-// Mulai Game
-function startGame() {
-    currentLevel = 0;
-    document.getElementById('chat-box').innerHTML = ''; // Reset chat
-    showScreen('game-screen');
+    // Hide all screens
+    const screens = document.querySelectorAll('.screen');
+    screens.forEach(s => s.classList.remove('active'));
     
-    // Bot memberikan instruksi pertama setelah delay sedikit
-    setTimeout(() => {
-        botType(missions[currentLevel]);
-    }, 500);
-}
-
-// Fungsi Bot Mengetik/Muncul Chat
-function botType(text) {
-    const chatBox = document.getElementById('chat-box');
-    const msgDiv = document.createElement('div');
-    msgDiv.className = 'message bot';
-    msgDiv.innerText = text;
-    chatBox.appendChild(msgDiv);
-    chatBox.scrollTop = chatBox.scrollHeight; // Auto scroll ke bawah
-    
-    // Update teks status
-    document.getElementById('instruction-text').innerText = "Silakan upload foto bukti...";
-}
-
-// Fungsi User Mengirim Foto (Fake Check)
-function handlePhotoUpload() {
-    const input = document.getElementById('camera-input');
-    
-    if (input.files && input.files[0]) {
-        // 1. Tampilkan feedback visual bahwa user mengirim foto
-        const chatBox = document.getElementById('chat-box');
-        const userMsg = document.createElement('div');
-        userMsg.className = 'message user';
-        userMsg.innerText = "📸 [Foto Terkirim]";
-        chatBox.appendChild(userMsg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-
-        // 2. Proses 'Loading' sebentar agar terasa real
-        document.getElementById('instruction-text').innerText = "Memeriksa foto...";
-        
-        // 3. Fake Feedback Logic (Apapun inputnya dianggap benar)
-        setTimeout(() => {
-            feedbackCorrect();
-        }, 1500); // Delay 1.5 detik
-    }
-}
-
-// Fungsi Feedback Benar & Lanjut Level
-function feedbackCorrect() {
-    // Bot bilang benar
-    botType("Yeay kamu benar! ✅");
-    
-    // Reset input file agar bisa upload lagi
-    document.getElementById('camera-input').value = '';
-
-    // Naik level
-    currentLevel++;
-
-    // Cek apakah game sudah selesai?
-    if (currentLevel < missions.length) {
-        // Lanjut ke misi berikutnya setelah jeda
-        setTimeout(() => {
-            botType(missions[currentLevel]);
-        }, 1500);
+    // Show the target screen
+    const targetScreen = document.getElementById(screenId);
+    if (targetScreen) {
+        targetScreen.classList.add('active');
     } else {
-        // Game Selesai
-        setTimeout(() => {
-            showScreen('result-screen');
-        }, 2000);
+        console.error("Screen not found: " + screenId);
     }
+}
+
+function simulateConnection() {
+    const btn = document.querySelector('#screen-connect button');
+    if (!btn) return;
+    
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "Connecting...";
+    btn.disabled = true;
+    
+    // Fake loading time for NFC connection
+    setTimeout(() => {
+        showScreen('screen-start');
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    }, 1500);
+}
+
+function startGame() {
+    currentStep = 0;
+    loadObjective(currentStep);
+    showScreen('screen-game');
+}
+
+function loadObjective(index) {
+    if (index >= objectives.length) {
+        showScreen('screen-success');
+        return;
+    }
+
+    const data = objectives[index];
+    
+    // Update DOM elements with objective data
+    document.getElementById('objective-title').innerText = `Misi ${index + 1}: ${data.title}`;
+    document.getElementById('objective-desc').innerText = data.desc;
+    document.getElementById('board-instruction').innerText = data.instruction;
+    document.getElementById('objective-img').src = data.img;
+    
+    // Update progress bar
+    const progress = ((index) / objectives.length) * 100;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+    
+    // Hide previous feedback
+    document.getElementById('feedback-area').classList.add('hidden');
+}
+
+function resetApp() {
+    showScreen('screen-connect');
+}
+
+// --- WIZARD OF OZ LOGIC ---
+// This function simulates the Board sending a signal to the App
+// saying "Pressure sensor activated" or "Magnet moved correctly"
+function triggerBoardSensor() {
+    // Check if we are in game mode
+    if (!document.getElementById('screen-game').classList.contains('active')) return;
+
+    // Show visual feedback that sensor worked
+    const feedback = document.getElementById('feedback-area');
+    feedback.classList.remove('hidden');
+
+    // Wait a moment then go to next step
+    setTimeout(() => {
+        currentStep++;
+        loadObjective(currentStep);
+    }, 1000);
 }
