@@ -39,7 +39,7 @@ const objectives = [
         desc: "Jalur sudah aman. Segera menuju titik kumpul.",
         instruction: "Geser PION PENGGUNA mengikuti jalur hijau ke Assembly Point.",
         // Reusing the map visual for evacuation route
-        img: "map_visual.png"
+        img: "map.png"
     }
 ];
 
@@ -128,3 +128,4 @@ function triggerBoardSensor() {
         loadObjective(currentStep);
     }, 1500);
 }
+
